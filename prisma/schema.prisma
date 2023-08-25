@@ -18,6 +18,8 @@ datasource db {
 model Cars {
     id           String    @id @default(cuid())
     protocol     String    @unique
+    sign         String
+    
     category     Category
     createdAt    DateTime
     leavedAt     DateTime?
@@ -68,11 +70,11 @@ enum Category {
 // }
 
 model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String   @unique
-    image         String?
-    password      String
+    id       String  @id @default(cuid())
+    name     String?
+    email    String  @unique
+    image    String?
+    password String
     // accounts      Account[]
     // sessions      Session[]
 }

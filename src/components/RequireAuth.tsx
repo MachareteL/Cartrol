@@ -18,5 +18,5 @@ export default function RequireAuth({
   });
   console.log(data);
   
-  return <div>{children}</div>;
+  return <>{children}</>;
 }

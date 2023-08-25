@@ -6,6 +6,7 @@ import {
   ChartBarIcon,
   NewspaperIcon,
   ChartPieIcon,
+  PlusCircleIcon,
 } from "@heroicons/react/24/outline";
 
 export default function Sidebar() {
@@ -31,13 +32,13 @@ export default function Sidebar() {
     },
     {
       name: "Registry",
-      href: "#",
+      href: "/registry",
       current: pathname == "/registry" ? true : false,
-      icon: <NewspaperIcon className="h-10 w-10" />,
+      icon: <PlusCircleIcon className="h-10 w-10" />,
     },
   ];
   return (
-    <div className="absolute top-1/2 flex h-screen w-20 -translate-y-1/2 flex-col items-center justify-center gap-14">
+    <div className="absolute hidden top-1/2 sm:flex h-screen w-20 -translate-y-1/2 flex-col items-center justify-center gap-14">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="100"
