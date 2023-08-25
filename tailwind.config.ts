@@ -6,6 +6,7 @@ export default {
     extend: {
       colors: {
         bermuda: "#0400C2",
+        banana: '#FFB800'
       },
     },
   },
