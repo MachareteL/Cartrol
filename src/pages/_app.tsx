@@ -4,15 +4,20 @@ import { type AppType } from "next/app";
 import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import Sidebar from "~/components/Sidebar";
+import RequireAuth from "~/components/RequireAuth";
+import { useRouter } from "next/router";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
+  const { pathname } = useRouter();
   return (
     <SessionProvider session={session}>
-      <Sidebar />
-      <Component {...pageProps} />
+      {pathname != "/login" && <Sidebar />}
+      <RequireAuth>
+        <Component {...pageProps} />
+      </RequireAuth>
     </SessionProvider>
   );
 };

@@ -1,4 +1,4 @@
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { ChangeEvent, useState } from "react";
 export default function Login() {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
