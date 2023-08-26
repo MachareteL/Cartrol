@@ -6,6 +6,8 @@ import { Gluten } from "next/font/google";
 const adlam = Gluten({
   subsets: ["latin"],
 });
+
+
 export default function Loading() {
   return (
     <div className="flex h-screen w-screen items-center justify-center">
