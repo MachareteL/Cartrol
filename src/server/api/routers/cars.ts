@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import {
   createTRPCRouter,
@@ -6,11 +7,30 @@ import {
 } from "~/server/api/trpc";
 
 export const carRoute = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
+  getAll: protectedProcedure
+    .input(
+      z.object({
+        cursor: z.number().optional(),
+      })
+    )
+    .query(async ({ ctx, input: { cursor = 0 } }) => {
+      const cars = await ctx.prisma.cars.findMany({
+        take: 11,
+        skip: 10 * cursor,
+        orderBy: [{ updatedAt: "desc" }],
+      });
+      console.log(cars);
+
+      let nextCursor: typeof cursor | undefined;
+      if (cars.length > 10) {
+        const nextPost = cars.pop();
+        if (nextPost != null) {
+          nextCursor = cursor + 1;
+        }
+      }
       return {
-        greeting: `Hello ${input.text}`,
+        cars,
+        nextCursor,
       };
     }),
 
@@ -29,6 +49,7 @@ export const carRoute = createTRPCRouter({
         isPresent: z.boolean(),
         createdAt: z.coerce.date(),
         leavedAt: z.coerce.date().optional(),
+        more: z.string().optional(),
       })
     )
     .mutation(
@@ -43,6 +64,7 @@ export const carRoute = createTRPCRouter({
           costumerName,
           leavedAt,
           sign,
+          more,
         },
       }) => {
         console.log({
@@ -54,8 +76,21 @@ export const carRoute = createTRPCRouter({
           isPresent,
           costumerName,
           sign,
+          more,
         });
-
+        if (protocol == "" || sign == "" || costumerName == "") {
+          throw new TRPCError({ code: "BAD_REQUEST", message: 'Há campos vazios. Defina todos os campos' });
+        }
+        if (
+          (!isPresent && !leavedAt) ||
+          !(isPresent && leavedAt == undefined)
+        ) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message:
+              "Se o veículo não está no patio você deve definir a data de saída",
+          });
+        }
         const newData = await ctx.prisma.cars.create({
           data: {
             category,
@@ -65,6 +100,7 @@ export const carRoute = createTRPCRouter({
             createdAt,
             isPresent,
             leavedAt,
+            more,
             costumer: {
               connectOrCreate: {
                 where: {

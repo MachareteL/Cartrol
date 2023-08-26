@@ -7,5 +7,13 @@ type CarType = {
   isPresent: boolean;
   isBurned: boolean;
   costumerName: string;
-  more?: String;
+  more?: string;
+};
+
+type CarListProps = {
+  isLoading: boolean;
+  isError: boolean;
+  hasMore: boolean;
+  fetchMoreCars: () => Promise<unknown>;
+  car?: CarType[];
 };

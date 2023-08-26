@@ -1,5 +1,5 @@
-import { signIn, useSession } from "next-auth/react";
-import { ChangeEvent, useState } from "react";
+import { signIn } from "next-auth/react";
+import React, { type ChangeEvent, useState } from "react";
 export default function Login() {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   function handleSubmit(e: React.FormEvent) {

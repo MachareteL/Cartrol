@@ -10,15 +10,18 @@ import {
   type SelectChangeEvent,
 } from "@mui/material";
 import Image from "next/image";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useEffect } from "react";
 import Textinput from "~/components/Textinput";
 import backgroundSVG from "public/Towing-amico.svg";
 import { api } from "~/utils/api";
 import swal from "sweetalert";
 import { useRouter } from "next/router";
+import moment from "moment";
 
 export default function Register() {
-  const carApi = api.cars.create.useMutation({
+  const carAPI = api.cars;
+  const { data } = carAPI.getCostumers.useQuery();
+  const createCar = carAPI.create.useMutation({
     onSuccess: ({ sign, protocol }) => {
       swal({
         icon: "success",
@@ -26,8 +29,15 @@ export default function Register() {
         text: `O registro de número: ${protocol} foi efetuado com sucesso!`,
       }).then(() => reload());
     },
+    onError: ({ message }) => {
+      swal({
+        icon: "error",
+        title: `Houve um erro!`,
+        text: message,
+      });
+    },
   });
-  const { data } = api.cars.getCostumers.useQuery();
+
   const { reload } = useRouter();
   const [carInfo, setCarInfo] = useState<CarType>({
     protocol: "",
@@ -38,6 +48,11 @@ export default function Register() {
     sign: "",
     costumerName: "",
   });
+
+  useEffect(() => {
+    console.log(carInfo);
+  }, [carInfo]);
+
   function handleChange({
     target,
   }: ChangeEvent<HTMLInputElement> | SelectChangeEvent) {
@@ -47,7 +62,7 @@ export default function Register() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     console.log(carInfo);
-    carApi.mutate(carInfo);
+    createCar.mutate(carInfo);
   }
   return (
     <div className="relative flex h-screen w-screen items-center justify-center">
@@ -114,13 +129,23 @@ export default function Register() {
           <Textinput
             type="date"
             name="createdAt"
-            onChange={handleChange}
-            className="relative flex-1 before:absolute before:-top-6 before:left-0 before:content-['Data_de_Entrada']"
+            onChange={({ target }) => {
+              setCarInfo({
+                ...carInfo,
+                createdAt: moment(target.value).toDate(),
+              });
+            }}
+            className="relative flex-1 before:absolute before:-top-6 before:left-0 before:content-['Data_de_Entrada*']"
           />
           <Textinput
             type="date"
             name="leavedAt"
-            onChange={handleChange}
+            onChange={({ target }) => {
+              setCarInfo({
+                ...carInfo,
+                leavedAt: moment(target.value).toDate(),
+              });
+            }}
             disabled={carInfo.isPresent}
             className="relative flex-1 before:absolute before:-top-6 before:left-0 before:content-['Data_de_Saida'] "
           />
@@ -131,15 +156,11 @@ export default function Register() {
             freeSolo
             options={(data ?? []).map(({ name }) => name)}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Seguradora"
-                onChange={(e) => {
-                  setCarInfo({ ...carInfo, costumerName: e.target.value });
-                }}
-                name="costumerName"
-              />
+              <TextField {...params} label="Seguradora" name="costumerName" required/>
             )}
+            onInputChange={(_, newValue) => {
+              setCarInfo({ ...carInfo, costumerName: newValue });
+            }}
           />
         </div>
         <div className="flex">
@@ -155,7 +176,7 @@ export default function Register() {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="rounded-md bg-bermuda px-4 py-2 text-white"
+            className="rounded-md bg-bermuda px-4 py-2 text-white hover:shadow-md"
           >
             Cadastrar
           </button>
