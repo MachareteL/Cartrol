@@ -1,6 +1,5 @@
 import React from "react";
 import dashboardpana from "public/Dashboard-pana.svg";
-import { CircularProgress } from "@mui/material";
 import Image from "next/image";
 import { Gluten } from "next/font/google";
 

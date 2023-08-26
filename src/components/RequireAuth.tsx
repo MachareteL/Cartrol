@@ -9,11 +9,11 @@ export default function RequireAuth({
   children: React.ReactElement;
 }) {
   const { pathname, push } = useRouter();
-  const { status, data } = useSession({
+  const { status } = useSession({
     required: true,
     onUnauthenticated() {
       if (pathname != "/login") {
-        push("/login");
+        void push("/login");
       }
     },
   });

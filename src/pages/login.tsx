@@ -1,10 +1,13 @@
 import { signIn } from "next-auth/react";
+import Image from "next/image";
 import React, { type ChangeEvent, useState } from "react";
+import ageu from "public/android-chrome-512x512.png";
+
 export default function Login() {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    signIn("credentials", { ...credentials, callbackUrl: "/" });
+    void signIn("credentials", { ...credentials, callbackUrl: "/" });
   }
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -12,12 +15,8 @@ export default function Login() {
   return (
     <div className="flex h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <img
-          className="mx-auto h-10 w-auto"
-          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-          alt="Your Company"
-        />
-        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        <Image className="mx-auto h-24 w-auto" src={ageu} alt="Ageu Guinchos" />
+        <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Sistema de controle
         </h2>
       </div>
@@ -39,7 +38,7 @@ export default function Login() {
                 type="email"
                 autoComplete="email"
                 required
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bermuda sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bermuda sm:text-sm sm:leading-6 p-2"
               />
             </div>
           </div>
@@ -61,7 +60,7 @@ export default function Login() {
                 type="password"
                 autoComplete="current-password"
                 required
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bermuda sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-bermuda sm:text-sm sm:leading-6 p-2"
               />
             </div>
           </div>

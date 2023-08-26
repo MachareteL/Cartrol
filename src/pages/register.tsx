@@ -10,7 +10,7 @@ import {
   type SelectChangeEvent,
 } from "@mui/material";
 import Image from "next/image";
-import React, { ChangeEvent, useState, useEffect } from "react";
+import React, { type ChangeEvent, useState, useEffect } from "react";
 import Textinput from "~/components/Textinput";
 import backgroundSVG from "public/Towing-amico.svg";
 import { api } from "~/utils/api";
@@ -27,10 +27,14 @@ export default function Register() {
         icon: "success",
         title: `Carro  ${sign} registrado com sucesso!`,
         text: `O registro de número: ${protocol} foi efetuado com sucesso!`,
-      }).then(() => reload());
+      })
+        .then(() => reload())
+        .catch((e) => {
+          console.log(e);
+        });
     },
     onError: ({ message }) => {
-      swal({
+      void swal({
         icon: "error",
         title: `Houve um erro!`,
         text: message,
@@ -156,7 +160,12 @@ export default function Register() {
             freeSolo
             options={(data ?? []).map(({ name }) => name)}
             renderInput={(params) => (
-              <TextField {...params} label="Seguradora" name="costumerName" required/>
+              <TextField
+                {...params}
+                label="Seguradora"
+                name="costumerName"
+                required
+              />
             )}
             onInputChange={(_, newValue) => {
               setCarInfo({ ...carInfo, costumerName: newValue });
