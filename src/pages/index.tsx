@@ -14,7 +14,16 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Moment from "react-moment";
 import Loading from "~/components/Loading";
 import { api } from "~/utils/api";
+import { Inter, Quicksand } from "next/font/google";
+import Card from "~/components/Card";
 
+const quicksand = Quicksand({
+  subsets: ["latin"],
+});
+
+const inter = Inter({
+  subsets: ["cyrillic"],
+});
 export default function Home() {
   const { data, isError, isLoading, hasNextPage, fetchNextPage } =
     api.cars.getAll.useInfiniteQuery(
@@ -45,47 +54,91 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="container mx-auto mt-24">
-        <InfiniteScroll
-          loader={<Loading />}
-          next={fetchNextPage}
-          hasMore={hasNextPage ?? false}
-          dataLength={vehicleList.length}
-        >
-          <TableContainer component={Paper}>
-            <Table>
-              <TableHead>
-                <TableCell>Protocolo</TableCell>
-                <TableCell>Placa</TableCell>
-                <TableCell>Formato</TableCell>
-                <TableCell>Data de Entrada</TableCell>
-                <TableCell>Pátio</TableCell>
-                <TableCell>Seguradora</TableCell>
-              </TableHead>
-              <TableBody>
-                {vehicleList.map((vehicle) => (
-                  <TableRow key={vehicle.id}>
-                    <TableCell component="th" scope="row">
-                      {vehicle.protocol}
-                    </TableCell>
-                    <TableCell>{vehicle.sign}</TableCell>
-                    <TableCell>{vehicle.category}</TableCell>
-                    <TableCell>
-                      <Moment >{vehicle.createdAt}</Moment>
-                    </TableCell>
-                    <TableCell>
-                      {vehicle.isPresent ? (
-                        <CheckCircleIcon className="w-6 text-green-500" />
-                      ) : (
-                        <XCircleIcon className="w-6 text-red-500" />
-                      )}
-                    </TableCell>
-                    <TableCell>{vehicle.costumerName}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </InfiniteScroll>
+        <Card>
+          <InfiniteScroll
+            loader={<Loading />}
+            next={fetchNextPage}
+            hasMore={hasNextPage ?? false}
+            dataLength={vehicleList.length}
+          >
+            <TableContainer
+              component={Paper}
+              className="border border-gray-300 shadow-md"
+            >
+              <Table>
+                <TableHead>
+                  <TableCell className={`font-bold ${inter.className} text-base`}>
+                    Protocolo
+                  </TableCell>
+                  <TableCell
+                    className={`font-extrabold ${inter.className} text-base`}
+                  >
+                    Placa
+                  </TableCell>
+                  <TableCell
+                    className={`font-extrabold ${inter.className} text-base`}
+                  >
+                    Formato
+                  </TableCell>
+                  <TableCell
+                    className={`font-extrabold ${inter.className} text-base`}
+                  >
+                    Seguradora
+                  </TableCell>
+                  <TableCell
+                    className={`font-extrabold ${inter.className} text-base`}
+                  >
+                    Data de Entrada
+                  </TableCell>
+                  <TableCell
+                    className={`font-extrabold ${inter.className} text-base`}
+                    padding="checkbox"
+                  >
+                    Pátio
+                  </TableCell>
+                  <TableCell
+                    className={`font-extrabold ${inter.className} text-base`}
+                  >
+                    Data de Saída
+                  </TableCell>
+                </TableHead>
+                <TableBody>
+                  {vehicleList.map((vehicle) => (
+                    <TableRow key={vehicle.id} className="odd:bg-stone-50">
+                      <TableCell component="th" scope="row">
+                        {vehicle.protocol}
+                      </TableCell>
+                      <TableCell>{vehicle.sign}</TableCell>
+                      <TableCell>{vehicle.category}</TableCell>
+                      <TableCell>{vehicle.costumerName}</TableCell>
+                      <TableCell>
+                        <Moment format="DD/MM/YYYY HH:mm:ss">
+                          {vehicle.createdAt}
+                        </Moment>
+                      </TableCell>
+                      <TableCell padding="checkbox">
+                        {vehicle.isPresent ? (
+                          <CheckCircleIcon className="w-6 text-green-500" />
+                        ) : (
+                          <XCircleIcon className="w-6 text-red-500" />
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        {vehicle.leavedAt ? (
+                          <Moment format="DD/MM/YYYY HH:mm:ss">
+                            {vehicle.leavedAt}
+                          </Moment>
+                        ) : (
+                          <></>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </InfiniteScroll>
+        </Card>
       </main>
     </>
   );

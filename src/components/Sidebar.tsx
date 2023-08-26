@@ -19,7 +19,7 @@ export default function Sidebar() {
     },
     {
       name: "Dashboard",
-      href: "#",
+      href: "/dashboard",
       current: pathname == "/dashboard" ? true : false,
       icon: <ChartPieIcon className="h-10 w-10" />,
     },
