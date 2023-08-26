@@ -19,6 +19,8 @@ export default function RequireAuth({
   });
   console.log({ status });
 
+  if (pathname == "/login") return <>{children}</>;
+
   if (status == "loading") {
     return <Loading />;
   }
