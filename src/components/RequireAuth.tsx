@@ -17,6 +17,7 @@ export default function RequireAuth({
       }
     },
   });
+  console.log({ status });
 
   if (status == "loading") {
     return <Loading />;
