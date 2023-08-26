@@ -14,11 +14,70 @@ export const carRoute = createTRPCRouter({
       };
     }),
 
-  getAll: publicProcedure.query(({ ctx }) => {
-    return ctx.prisma.cars.findMany();
+  getCostumers: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.costumer.findMany();
   }),
 
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
-  }),
+  create: protectedProcedure
+    .input(
+      z.object({
+        category: z.enum(["sedan", "minivan"]),
+        protocol: z.string(),
+        sign: z.string(),
+        costumerName: z.string(),
+        isBurned: z.boolean(),
+        isPresent: z.boolean(),
+        createdAt: z.coerce.date(),
+        leavedAt: z.coerce.date().optional(),
+      })
+    )
+    .mutation(
+      async ({
+        ctx,
+        input: {
+          category,
+          protocol,
+          isBurned,
+          createdAt,
+          isPresent,
+          costumerName,
+          leavedAt,
+          sign,
+        },
+      }) => {
+        console.log({
+          category,
+          protocol,
+          isBurned,
+          createdAt,
+          leavedAt,
+          isPresent,
+          costumerName,
+          sign,
+        });
+
+        const newData = await ctx.prisma.cars.create({
+          data: {
+            category,
+            protocol,
+            sign,
+            isBurned,
+            createdAt,
+            isPresent,
+            leavedAt,
+            costumer: {
+              connectOrCreate: {
+                where: {
+                  name: costumerName,
+                },
+                create: {
+                  name: costumerName,
+                },
+              },
+            },
+          },
+        });
+        return newData;
+      }
+    ),
 });

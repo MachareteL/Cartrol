@@ -1,9 +1,11 @@
 type CarType = {
   protocol: string;
   sign: string;
-  category: string;
+  category: "sedan" | "minivan";
   createdAt: Date;
   leavedAt?: Date;
   isPresent: boolean;
-  burned: boolean;
+  isBurned: boolean;
+  costumerName: string;
+  more?: String;
 };

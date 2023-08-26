@@ -6,4 +6,5 @@ export default function Card({ children }: { children: React.ReactNode }) {
       {children}
     </div>
   );
+
 }

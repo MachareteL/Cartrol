@@ -23,7 +23,7 @@ export default function Textinput({
       maxRows={lineCount}
       multiline={multiline}
       helperText={helperText}
-      inputProps={{ ...attr }}
+      inputProps={{ className: `disabled:bg-gray-300 cursor disabled:border disabled:border-slate-200 disabled:cursor-not-allowed`, ...attr }}
     ></TextField>
   );
 }

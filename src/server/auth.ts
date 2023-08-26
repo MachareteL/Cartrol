@@ -59,6 +59,7 @@ export const authOptions: NextAuthOptions = {
         password: { label: "password", type: "password" },
       },
       async authorize(credentials, req) {
+        
         // Add logic here to look up the user from the credentials supplied
         if (!credentials) {
           throw new Error("Credentials is missing.");

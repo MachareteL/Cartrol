@@ -31,9 +31,9 @@ export default function Sidebar() {
       icon: <ChartBarIcon className="h-10 w-10" />,
     },
     {
-      name: "Registry",
-      href: "/registry",
-      current: pathname == "/registry" ? true : false,
+      name: "Register",
+      href: "/register",
+      current: pathname == "/register" ? true : false,
       icon: <PlusCircleIcon className="h-10 w-10" />,
     },
   ];

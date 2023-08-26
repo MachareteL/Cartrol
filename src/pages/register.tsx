@@ -1,24 +1,42 @@
 import {
+  Autocomplete,
   Checkbox,
   FormControl,
   FormControlLabel,
-  FormGroup,
   InputLabel,
   MenuItem,
   Select,
+  TextField,
   type SelectChangeEvent,
 } from "@mui/material";
+import Image from "next/image";
 import React, { ChangeEvent, useState } from "react";
 import Textinput from "~/components/Textinput";
+import backgroundSVG from "public/Towing-amico.svg";
+import { api } from "~/utils/api";
+import swal from "sweetalert";
+import { useRouter } from "next/router";
 
-export default function registry() {
+export default function Register() {
+  const carApi = api.cars.create.useMutation({
+    onSuccess: ({ sign, protocol }) => {
+      swal({
+        icon: "success",
+        title: `Carro  ${sign} registrado com sucesso!`,
+        text: `O registro de número: ${protocol} foi efetuado com sucesso!`,
+      }).then(() => reload());
+    },
+  });
+  const { data } = api.cars.getCostumers.useQuery();
+  const { reload } = useRouter();
   const [carInfo, setCarInfo] = useState<CarType>({
     protocol: "",
-    burned: false,
-    category: "",
+    isBurned: false,
+    category: "sedan",
     createdAt: new Date(),
     isPresent: false,
     sign: "",
+    costumerName: "",
   });
   function handleChange({
     target,
@@ -29,12 +47,13 @@ export default function registry() {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     console.log(carInfo);
+    carApi.mutate(carInfo);
   }
   return (
-    <div className="flex h-screen w-screen items-center justify-center">
+    <div className="relative flex h-screen w-screen items-center justify-center">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-4 rounded-md border border-gray-200 p-16 px-8 shadow-md sm:w-1/3 sm:px-16"
+        className="flex flex-col gap-4 rounded-md border border-gray-200 bg-white p-16 px-8 shadow-md sm:w-1/3 sm:px-16"
       >
         <div className="flex">
           <Textinput
@@ -62,7 +81,8 @@ export default function registry() {
               onChange={handleChange}
               value={carInfo.category}
             >
-              <MenuItem value={"Sedan"}>Sedan</MenuItem>
+              <MenuItem value={"sedan"}>Sedan</MenuItem>
+              <MenuItem value={"minivan"}>Mini van</MenuItem>
             </Select>
           </FormControl>
         </div>
@@ -83,7 +103,7 @@ export default function registry() {
             control={
               <Checkbox
                 onChange={(e) => {
-                  setCarInfo({ ...carInfo, burned: e.target.checked });
+                  setCarInfo({ ...carInfo, isBurned: e.target.checked });
                 }}
               />
             }
@@ -101,22 +121,26 @@ export default function registry() {
             type="date"
             name="leavedAt"
             onChange={handleChange}
-            className="relative flex-1 before:absolute before:-top-6 before:left-0 before:content-['Data_de_Saida']"
+            disabled={carInfo.isPresent}
+            className="relative flex-1 before:absolute before:-top-6 before:left-0 before:content-['Data_de_Saida'] "
           />
         </div>
         <div className="flex">
-          <FormControl className="flex-1">
-            <InputLabel id="costumerLabel">Seguradora</InputLabel>
-            <Select
-              label="Seguradora"
-              name="costumer"
-              labelId="costumerLabel"
-              value={carInfo.category}
-              onChange={handleChange}
-            >
-              <MenuItem value={"Sedan"}>Sedan</MenuItem>
-            </Select>
-          </FormControl>
+          <Autocomplete
+            className="flex-1"
+            freeSolo
+            options={(data ?? []).map(({ name }) => name)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Seguradora"
+                onChange={(e) => {
+                  setCarInfo({ ...carInfo, costumerName: e.target.value });
+                }}
+                name="costumerName"
+              />
+            )}
+          />
         </div>
         <div className="flex">
           <Textinput
@@ -137,6 +161,9 @@ export default function registry() {
           </button>
         </div>
       </form>
+      <div className="absolute bottom-0 right-0 -z-30">
+        <Image src={backgroundSVG} alt="" />
+      </div>
     </div>
   );
 }

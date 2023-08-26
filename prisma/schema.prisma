@@ -19,19 +19,19 @@ model Cars {
     id           String    @id @default(cuid())
     protocol     String    @unique
     sign         String
-    
+    more         String?
     category     Category
     createdAt    DateTime
     leavedAt     DateTime?
     updatedAt    DateTime  @updatedAt
     isPresent    Boolean
-    burned       Boolean
+    isBurned     Boolean
     costumer     Costumer  @relation(fields: [costumerName], references: [name])
     costumerName String
 }
 
 model Costumer {
-    name String @unique
+    name String @id @unique
     Cars Cars[]
 }
 
