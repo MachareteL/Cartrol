@@ -1,9 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
-import {
-  createTRPCRouter,
-  protectedProcedure,
-} from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
 export const carRoute = createTRPCRouter({
   getAll: protectedProcedure
@@ -18,7 +15,7 @@ export const carRoute = createTRPCRouter({
         skip: 10 * cursor,
         orderBy: [{ updatedAt: "desc" }],
       });
-      console.log(cars);
+      // console.log(cars);
 
       let nextCursor: typeof cursor | undefined;
       if (cars.length > 10) {
@@ -78,7 +75,10 @@ export const carRoute = createTRPCRouter({
           more,
         });
         if (protocol == "" || sign == "" || costumerName == "") {
-          throw new TRPCError({ code: "BAD_REQUEST", message: 'Há campos vazios. Defina todos os campos' });
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Há campos vazios. Defina todos os campos",
+          });
         }
         if (
           (!isPresent && !leavedAt) ||
@@ -115,4 +115,27 @@ export const carRoute = createTRPCRouter({
         return newData;
       }
     ),
+  getTotal: protectedProcedure.input(z.object({})).query(async ({ ctx }) => {
+    const TotalBurnedVehicles = await ctx.prisma.cars.count({
+      where: {
+        isBurned: true,
+      },
+    });
+    const totalCostumers = await ctx.prisma.costumer.count();
+
+    const totalVehiclesPresent = await ctx.prisma.cars.count({
+      where: {
+        isPresent: true,
+      },
+    });
+
+    const totalRegisteredVehicles = await ctx.prisma.cars.count();
+
+    return {
+      totalRegisteredVehicles,
+      TotalBurnedVehicles,
+      totalCostumers,
+      totalVehiclesPresent,
+    };
+  }),
 });

@@ -10,7 +10,7 @@ const adlam = Gluten({
 
 export default function Loading() {
   return (
-    <div className="flex h-screen w-screen items-center justify-center">
+    <div className="flex h-screen w-full items-center justify-center">
       <Image src={dashboardpana} alt="" className="relative w-[600px]" />
       <div
         className={`${adlam.className} absolute bottom-48 flex space-x-1 text-3xl`}
