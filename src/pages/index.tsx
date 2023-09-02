@@ -24,13 +24,13 @@ const inter = Inter({
 });
 export default function Home() {
   const { data, isError, isLoading, hasNextPage, fetchNextPage } =
-    api.cars.getAll.useInfiniteQuery(
+    api.vehicles.getAll.useInfiniteQuery(
       {},
       {
         getNextPageParam: (lastpage) => lastpage.nextCursor,
       }
     );
-  const { data: amount } = api.cars.getTotal.useQuery({});
+  const { data: amount } = api.vehicles.getTotal.useQuery({});
 
   if (isLoading) {
     return <Loading />;
@@ -41,7 +41,7 @@ export default function Home() {
   if (!data) {
     return <>Cadaste um novo veículo para ver aqui as informações</>;
   }
-  const vehicleList = data.pages.flatMap((page) => page.cars);
+  const vehicleList = data.pages.flatMap((page) => page.vehicles);
   vehicleList.map(({ createdAt, sign }) => {
     console.log({ placa: sign, data: createdAt });
   });

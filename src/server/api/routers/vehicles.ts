@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
-export const carRoute = createTRPCRouter({
+export const vehiclesRoute = createTRPCRouter({
   getAll: protectedProcedure
     .input(
       z.object({
@@ -10,22 +10,22 @@ export const carRoute = createTRPCRouter({
       })
     )
     .query(async ({ ctx, input: { cursor = 0 } }) => {
-      const cars = await ctx.prisma.cars.findMany({
+      const vehicles = await ctx.prisma.vehicles.findMany({
         take: 11,
         skip: 10 * cursor,
         orderBy: [{ updatedAt: "desc" }],
       });
-      // console.log(cars);
+      // console.log(vehicles);
 
       let nextCursor: typeof cursor | undefined;
-      if (cars.length > 10) {
-        const nextPost = cars.pop();
+      if (vehicles.length > 10) {
+        const nextPost = vehicles.pop();
         if (nextPost != null) {
           nextCursor = cursor + 1;
         }
       }
       return {
-        cars,
+        vehicles,
         nextCursor,
       };
     }),
@@ -90,7 +90,7 @@ export const carRoute = createTRPCRouter({
               "Se o veículo não está no patio você deve definir a data de saída",
           });
         }
-        const newData = await ctx.prisma.cars.create({
+        const newData = await ctx.prisma.vehicles.create({
           data: {
             category,
             protocol,
@@ -116,20 +116,20 @@ export const carRoute = createTRPCRouter({
       }
     ),
   getTotal: protectedProcedure.input(z.object({})).query(async ({ ctx }) => {
-    const TotalBurnedVehicles = await ctx.prisma.cars.count({
+    const TotalBurnedVehicles = await ctx.prisma.vehicles.count({
       where: {
         isBurned: true,
       },
     });
     const totalCostumers = await ctx.prisma.costumer.count();
 
-    const totalVehiclesPresent = await ctx.prisma.cars.count({
+    const totalVehiclesPresent = await ctx.prisma.vehicles.count({
       where: {
         isPresent: true,
       },
     });
 
-    const totalRegisteredVehicles = await ctx.prisma.cars.count();
+    const totalRegisteredVehicles = await ctx.prisma.vehicles.count();
 
     return {
       totalRegisteredVehicles,

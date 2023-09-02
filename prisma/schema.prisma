@@ -15,7 +15,7 @@ datasource db {
     directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
-model Cars {
+model Vehicles {
     id           String    @id @default(cuid())
     protocol     String    @unique
     sign         String
@@ -32,7 +32,7 @@ model Cars {
 
 model Costumer {
     name String @id @unique
-    Cars Cars[]
+    Vehicles Vehicles[]
 }
 
 enum Category {

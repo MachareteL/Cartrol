@@ -19,7 +19,7 @@ import { useRouter } from "next/router";
 import moment from "moment";
 
 export default function Register() {
-  const carAPI = api.cars;
+  const carAPI = api.vehicles;
   const { data } = carAPI.getCostumers.useQuery();
   const createCar = carAPI.create.useMutation({
     onSuccess: ({ sign, protocol }) => {

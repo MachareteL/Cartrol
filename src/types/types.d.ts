@@ -14,6 +14,6 @@ type CarListProps = {
   isLoading: boolean;
   isError: boolean;
   hasMore: boolean;
-  fetchMoreCars: () => Promise<unknown>;
+  fetchMorevehicles: () => Promise<unknown>;
   car?: CarType[];
 };

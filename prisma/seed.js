@@ -43,7 +43,7 @@ async function seedDB() {
     });
   }
   try {
-    await prisma.cars.createMany({
+    await prisma.vehicles.createMany({
       data,
     });
     // await prisma.costumer.createMany({
@@ -61,7 +61,7 @@ async function seedDB() {
     // });
     // console.log("costumer created sucessfully");
 
-    // await prisma.cars.createMany({
+    // await prisma.vehicles.createMany({
     //   data: [
     //     {
     //       protocol: "Protocolo1",
@@ -96,7 +96,7 @@ async function seedDB() {
     //     },
     //   ],
     // });
-    console.log("cars created successfully");
+    console.log("vehicles created successfully");
   } catch (error) {
     console.log({ error });
   } finally {
