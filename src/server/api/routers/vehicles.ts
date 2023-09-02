@@ -31,13 +31,19 @@ export const vehiclesRoute = createTRPCRouter({
     }),
 
   getCostumers: protectedProcedure.query(({ ctx }) => {
-    return ctx.prisma.costumer.findMany();
+    return ctx.prisma.costumer.findMany({
+      select: { name: true },
+    });
   }),
-
+  getModels: protectedProcedure.query(({ ctx }) => {
+    return ctx.prisma.model.findMany({
+      select: { name: true },
+    });
+  }),
   create: protectedProcedure
     .input(
       z.object({
-        category: z.enum(["sedan", "minivan"]),
+        modelName: z.string(),
         protocol: z.string(),
         sign: z.string(),
         costumerName: z.string(),
@@ -52,7 +58,7 @@ export const vehiclesRoute = createTRPCRouter({
       async ({
         ctx,
         input: {
-          category,
+          modelName,
           protocol,
           isBurned,
           createdAt,
@@ -64,7 +70,7 @@ export const vehiclesRoute = createTRPCRouter({
         },
       }) => {
         console.log({
-          category,
+          modelName,
           protocol,
           isBurned,
           createdAt,
@@ -74,7 +80,7 @@ export const vehiclesRoute = createTRPCRouter({
           sign,
           more,
         });
-        if (protocol == "" || sign == "" || costumerName == "") {
+        if (protocol == "" || sign == "" || !costumerName || modelName == "") {
           throw new TRPCError({
             code: "BAD_REQUEST",
             message: "Há campos vazios. Defina todos os campos",
@@ -92,7 +98,6 @@ export const vehiclesRoute = createTRPCRouter({
         }
         const newData = await ctx.prisma.vehicles.create({
           data: {
-            category,
             protocol,
             sign,
             isBurned,
@@ -107,6 +112,16 @@ export const vehiclesRoute = createTRPCRouter({
                 },
                 create: {
                   name: costumerName,
+                },
+              },
+            },
+            model: {
+              connectOrCreate: {
+                where: {
+                  name: modelName,
+                },
+                create: {
+                  name: modelName,
                 },
               },
             },

@@ -20,7 +20,6 @@ model Vehicles {
     protocol     String    @unique
     sign         String
     more         String?
-    category     Category
     createdAt    DateTime
     leavedAt     DateTime?
     updatedAt    DateTime  @updatedAt
@@ -28,18 +27,18 @@ model Vehicles {
     isBurned     Boolean
     costumer     Costumer  @relation(fields: [costumerName], references: [name])
     costumerName String
+    model        Model     @relation(fields: [modelName], references: [name])
+    modelName    String
 }
 
 model Costumer {
-    name String @id @unique
+    name     String     @id @unique
     Vehicles Vehicles[]
 }
 
-enum Category {
-    sedan
-    minivan
-    hatch
-    caminhonete
+model Model {
+    name     String     @id @unique
+    Vehicles Vehicles[]
 }
 
 // Necessary for Next auth

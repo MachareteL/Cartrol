@@ -38,14 +38,14 @@ export default function Sidebar() {
   ];
   return (
     <>
-      <div className="absolute top-1/2 z-40 hidden h-screen w-20 -translate-y-1/2 flex-col items-center justify-center gap-14 sm:flex">
+      <div className="fixed top-1/2 z-40 hidden h-screen w-20 -translate-y-1/2 flex-col items-center justify-center gap-14 sm:flex">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="100"
           height="850"
           viewBox="0 0 100 850"
           fill="none"
-          className="absolute -z-10 h-full w-full"
+          className="fixed -z-10 h-full w-full"
         >
           <path
             fillRule="evenodd"
@@ -69,14 +69,14 @@ export default function Sidebar() {
           </Link>
         ))}
       </div>
-      <div className="absolute bottom-0 z-40 flex h-12 w-screen items-center justify-center gap-6 sm:hidden">
+      <div className="fixed bottom-0 z-40 flex h-12 w-screen items-center justify-center gap-6 sm:hidden">
         <svg
           width="850"
           height="300"
           viewBox="0 0 850 100"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
-          className="absolute -z-10 h-full w-full"
+          className="fixed -z-10 h-full w-full"
         >
           <path
             fillRule="evenodd"

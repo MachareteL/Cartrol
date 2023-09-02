@@ -124,7 +124,7 @@ export default function Home() {
                         {vehicle.protocol}
                       </TableCell>
                       <TableCell>{vehicle.sign}</TableCell>
-                      <TableCell>{vehicle.category}</TableCell>
+                      <TableCell>{vehicle.modelName}</TableCell>
                       <TableCell>{vehicle.costumerName}</TableCell>
                       <TableCell>
                         <Moment format="DD/MM/YYYY HH:mm:ss">

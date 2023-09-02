@@ -20,7 +20,8 @@ import moment from "moment";
 
 export default function Register() {
   const carAPI = api.vehicles;
-  const { data } = carAPI.getCostumers.useQuery();
+  const { data: costumers } = carAPI.getCostumers.useQuery();
+  const { data: models } = carAPI.getModels.useQuery()
   const createCar = carAPI.create.useMutation({
     onSuccess: ({ sign, protocol }) => {
       swal({
@@ -46,7 +47,7 @@ export default function Register() {
   const [carInfo, setCarInfo] = useState<CarType>({
     protocol: "",
     isBurned: false,
-    category: "sedan",
+    modelName: "",
     createdAt: new Date(),
     isPresent: false,
     sign: "",
@@ -72,7 +73,7 @@ export default function Register() {
     <div className="relative flex h-screen w-screen items-center justify-center">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-4 rounded-md border border-gray-200 bg-white p-16 px-8 shadow-md sm:w-1/3 sm:px-16"
+        className="flex flex-col gap-4 rounded-md border border-gray-200 bg-white p-16 px-8 shadow-md lg:w-1/3 lg:px-16"
       >
         <div className="flex">
           <Textinput
@@ -91,19 +92,22 @@ export default function Register() {
             required
             onChange={handleChange}
           />
-          <FormControl className="flex-1" required>
-            <InputLabel id="categoryLabel">Categoria</InputLabel>
-            <Select
-              label="Categoria"
-              labelId="categoryLabel"
-              name="category"
-              onChange={handleChange}
-              value={carInfo.category}
-            >
-              <MenuItem value={"sedan"}>Sedan</MenuItem>
-              <MenuItem value={"minivan"}>Mini van</MenuItem>
-            </Select>
-          </FormControl>
+          <Autocomplete
+            className="flex-1"
+            freeSolo
+            options={(models ?? []).map(({ name }) => name)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Modelo"
+                name="modelName"
+                required
+              />
+            )}
+            onInputChange={(_, newValue) => {
+              setCarInfo({ ...carInfo, modelName: newValue });
+            }}
+          />
         </div>
         <div className="-mt-4 flex gap-4">
           <FormControlLabel
@@ -158,7 +162,7 @@ export default function Register() {
           <Autocomplete
             className="flex-1"
             freeSolo
-            options={(data ?? []).map(({ name }) => name)}
+            options={(costumers ?? []).map(({ name }) => name)}
             renderInput={(params) => (
               <TextField
                 {...params}
