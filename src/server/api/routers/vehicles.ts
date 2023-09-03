@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import moment from "moment";
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
@@ -130,27 +131,32 @@ export const vehiclesRoute = createTRPCRouter({
         return newData;
       }
     ),
-  getTotal: protectedProcedure.input(z.object({})).query(async ({ ctx }) => {
-    const TotalBurnedVehicles = await ctx.prisma.vehicles.count({
+  getTotal: protectedProcedure.query(async ({ ctx }) => {
+    // const TotalBurnedVehicles = await ctx.prisma.vehicles.count({
+    //   where: {
+    //     isBurned: true,
+    //   },
+    // });
+    // const totalCostumers = await ctx.prisma.costumer.count();
+
+    // const totalVehiclesPresent = await ctx.prisma.vehicles.count({
+    //   where: {
+    //     isPresent: true,
+    //   },
+    // });
+
+    // const totalRegisteredVehicles = await ctx.prisma.vehicles.count();
+
+    return await ctx.prisma.vehicles.count();
+    // TotalBurnedVehicles,
+    // totalCostumers,
+    // totalVehiclesPresent,
+  }),
+  getTodayTotal: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.vehicles.count({
       where: {
-        isBurned: true,
+        createdAt: { gte: moment().subtract(1, "day").toDate() },
       },
     });
-    const totalCostumers = await ctx.prisma.costumer.count();
-
-    const totalVehiclesPresent = await ctx.prisma.vehicles.count({
-      where: {
-        isPresent: true,
-      },
-    });
-
-    const totalRegisteredVehicles = await ctx.prisma.vehicles.count();
-
-    return {
-      totalRegisteredVehicles,
-      TotalBurnedVehicles,
-      totalCostumers,
-      totalVehiclesPresent,
-    };
   }),
 });

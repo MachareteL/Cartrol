@@ -1,18 +1,16 @@
 import {
   Autocomplete,
   Checkbox,
-  FormControl,
   FormControlLabel,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
   type SelectChangeEvent,
 } from "@mui/material";
 import Image from "next/image";
 import React, { type ChangeEvent, useState, useEffect } from "react";
 import Textinput from "~/components/Textinput";
-import backgroundSVG from "public/Towing-amico.svg";
+import truckpana from "public/Towing-amico.svg";
+import parkingpana from "public/parking-pana.svg";
+
 import { api } from "~/utils/api";
 import swal from "sweetalert";
 import { useRouter } from "next/router";
@@ -21,7 +19,7 @@ import moment from "moment";
 export default function Register() {
   const carAPI = api.vehicles;
   const { data: costumers } = carAPI.getCostumers.useQuery();
-  const { data: models } = carAPI.getModels.useQuery()
+  const { data: models } = carAPI.getModels.useQuery();
   const createCar = carAPI.create.useMutation({
     onSuccess: ({ sign, protocol }) => {
       swal({
@@ -71,6 +69,12 @@ export default function Register() {
   }
   return (
     <div className="relative flex h-screen w-screen items-center justify-center">
+      <div className="absolute -bottom-10 right-0 -z-30 lg:bottom-0">
+        <Image src={truckpana} alt="" />
+      </div>
+      <div className="absolute left-10 top-10 -z-30 hidden lg:block">
+        <Image src={parkingpana} alt="" />
+      </div>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col gap-4 rounded-md border border-gray-200 bg-white p-16 px-8 shadow-md lg:w-1/3 lg:px-16"
@@ -97,12 +101,7 @@ export default function Register() {
             freeSolo
             options={(models ?? []).map(({ name }) => name)}
             renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Modelo"
-                name="modelName"
-                required
-              />
+              <TextField {...params} label="Modelo" name="modelName" required />
             )}
             onInputChange={(_, newValue) => {
               setCarInfo({ ...carInfo, modelName: newValue });
@@ -195,9 +194,6 @@ export default function Register() {
           </button>
         </div>
       </form>
-      <div className="absolute bottom-0 right-0 -z-30">
-        <Image src={backgroundSVG} alt="" />
-      </div>
     </div>
   );
 }
