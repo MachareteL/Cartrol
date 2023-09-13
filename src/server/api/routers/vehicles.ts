@@ -48,7 +48,7 @@ export const vehiclesRoute = createTRPCRouter({
         protocol: z.string(),
         sign: z.string(),
         costumerName: z.string(),
-        isBurned: z.boolean(),
+        isMotorcycle: z.boolean(),
         isPresent: z.boolean(),
         createdAt: z.coerce.date(),
         leavedAt: z.coerce.date().optional(),
@@ -61,7 +61,7 @@ export const vehiclesRoute = createTRPCRouter({
         input: {
           modelName,
           protocol,
-          isBurned,
+          isMotorcycle,
           createdAt,
           isPresent,
           costumerName,
@@ -73,7 +73,7 @@ export const vehiclesRoute = createTRPCRouter({
         console.log({
           modelName,
           protocol,
-          isBurned,
+          isMotorcycle,
           createdAt,
           leavedAt,
           isPresent,
@@ -101,7 +101,7 @@ export const vehiclesRoute = createTRPCRouter({
           data: {
             protocol,
             sign,
-            isBurned,
+            isMotorcycle,
             createdAt,
             isPresent,
             leavedAt,
@@ -134,7 +134,7 @@ export const vehiclesRoute = createTRPCRouter({
   getTotal: protectedProcedure.query(async ({ ctx }) => {
     // const TotalBurnedVehicles = await ctx.prisma.vehicles.count({
     //   where: {
-    //     isBurned: true,
+    //     isMotorcycle: true,
     //   },
     // });
     // const totalCostumers = await ctx.prisma.costumer.count();

@@ -44,7 +44,7 @@ export default function Register() {
   const { reload } = useRouter();
   const [carInfo, setCarInfo] = useState<CarType>({
     protocol: "",
-    isBurned: false,
+    isMotorcycle: false,
     modelName: "",
     createdAt: new Date(),
     isPresent: false,
@@ -125,11 +125,11 @@ export default function Register() {
             control={
               <Checkbox
                 onChange={(e) => {
-                  setCarInfo({ ...carInfo, isBurned: e.target.checked });
+                  setCarInfo({ ...carInfo, isMotorcycle: e.target.checked });
                 }}
               />
             }
-            label="Carro queimado"
+            label="O veículo é uma motocicleta"
           />
         </div>
         <div className="flex gap-4">

@@ -1,7 +1,7 @@
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import React, { type ChangeEvent, useState } from "react";
-import ageu from "public/android-chrome-512x512.png";
+import ageu from "public/Guincho.svg";
 
 export default function Login() {
   const [credentials, setCredentials] = useState({ email: "", password: "" });
@@ -15,14 +15,14 @@ export default function Login() {
   return (
     <div className="flex h-screen flex-1 flex-col justify-center px-6 py-12 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-        <Image className="mx-auto h-24 w-auto" src={ageu} alt="Ageu Guinchos" />
-        <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+        <Image className="mx-auto h-64 w-auto" src={ageu} alt="Ageu Guinchos" />
+        {/* <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
           Sistema de controle
-        </h2>
+        </h2> */}
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-6 mb-20" onSubmit={handleSubmit}>
           <div>
             <label
               htmlFor="email"

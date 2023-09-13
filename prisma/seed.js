@@ -63,7 +63,7 @@ async function seedDB() {
               Math.random() * Math.floor(Math.random() * Date.now())
             )}`,
             createdAt: new Date(),
-            isBurned: randomizeBool(),
+            isMotorcycle: randomizeBool(),
             isPresent: true,
             sign: "BQR3577",
             costumer: {

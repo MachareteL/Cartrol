@@ -24,7 +24,7 @@ model Vehicles {
     leavedAt     DateTime?
     updatedAt    DateTime  @updatedAt
     isPresent    Boolean
-    isBurned     Boolean
+    isMotorcycle Boolean
     costumer     Costumer  @relation(fields: [costumerName], references: [name])
     costumerName String
     model        Model     @relation(fields: [modelName], references: [name])

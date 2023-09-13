@@ -5,7 +5,7 @@ type CarType = {
   createdAt: Date;
   leavedAt?: Date;
   isPresent: boolean;
-  isBurned: boolean;
+  isMotorcycle: boolean;
   costumerName: string;
   more?: string;
 };
