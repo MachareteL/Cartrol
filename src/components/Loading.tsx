@@ -13,7 +13,7 @@ export default function Loading() {
     <div className="flex h-screen w-full items-center justify-center">
       <Image src={dashboardpana} alt="" className="relative w-[600px]" />
       <div
-        className={`${adlam.className} absolute bottom-48 flex space-x-1 text-3xl`}
+        className={`${adlam.className} absolute bottom-36 sm:bottom-44 flex space-x-1 text-3xl`}
       >
         <h1>Loading</h1>
         <h1 className="animate-bounce delay-100">.</h1>

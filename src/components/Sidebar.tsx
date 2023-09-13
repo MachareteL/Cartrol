@@ -15,37 +15,62 @@ export default function Sidebar() {
       name: "Home",
       href: "/",
       current: pathname == "/" ? true : false,
-      icon: <HomeIcon className="w-8 sm:h-10 sm:w-10" />,
+      icon: (
+        <HomeIcon
+          
+          className={`w-8 sm:h-10 sm:w-10 ${
+            pathname == "/" ? "text-banana" : "text-white"
+          } z-40 hover:text-banana`}
+        />
+      ),
     },
     {
       name: "Dashboard",
       href: "/dashboard",
       current: pathname == "/dashboard" ? true : false,
-      icon: <ChartPieIcon className="w-8 sm:h-10 sm:w-10" />,
+      icon: (
+        <ChartPieIcon
+          className={`w-8 sm:h-10 sm:w-10 ${
+            pathname == "/dashboard" ? "text-banana" : "text-white"
+          } z-40 hover:text-banana`}
+        />
+      ),
     },
     {
       name: "Table",
       href: "#",
       current: pathname == "/table" ? true : false,
-      icon: <ChartBarIcon className="w-8 sm:h-10 sm:w-10" />,
+      icon: (
+        <ChartBarIcon
+          className={`w-8 sm:h-10 sm:w-10 ${
+            pathname == "/table" ? "text-banana" : "text-white"
+          } z-40 hover:text-banana`}
+        />
+      ),
     },
     {
       name: "Register",
       href: "/register",
       current: pathname == "/register" ? true : false,
-      icon: <PlusCircleIcon className="w-8 sm:h-10 sm:w-10" />,
+      icon: (
+        <PlusCircleIcon
+          className={`w-8 sm:h-10 sm:w-10 ${
+            pathname == "/register" ? "text-banana" : "text-white"
+          } z-40 hover:text-banana`}
+        />
+      ),
     },
   ];
   return (
     <>
-      <div className="fixed top-1/2 z-40 hidden h-screen w-20 -translate-y-1/2 flex-col items-center justify-center gap-14 sm:flex">
+      <div className="sticky top-0 hidden h-screen w-20 flex-col items-center justify-center gap-14 sm:flex">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="100"
           height="850"
           viewBox="0 0 100 850"
           fill="none"
-          className="fixed -z-10 h-full w-full"
+          className="absolute -z-10 h-full w-full"
         >
           <path
             fillRule="evenodd"
@@ -60,9 +85,9 @@ export default function Sidebar() {
             href={item.href}
             className={`${
               item.current
-                ? "rounded-full bg-white p-2 text-banana"
-                : "text-white"
-            }  `}
+                ? "bg-white"
+                : "relative overflow-hidden text-white after:absolute after:right-0 after:top-0 after:-z-10 after:h-full after:w-0 after:bg-white after:transition-all after:hover:w-full"
+            } w-full rounded-l-full px-5 py-2`}
             aria-current={item.current ? "page" : undefined}
           >
             {item.icon}
