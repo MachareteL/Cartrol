@@ -14,7 +14,7 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col gap-12">
       <h1 className={`p-8 text-6xl text-bermuda`}>DASHBOARD</h1>
-      <div className="container mx-auto flex justify-center">
+      <div className="container mx-auto flex justify-center sm:justify-start">
         <Card className="flex w-96">
           <div>
             <h1 className="text-gray-600">Cadastro nas últimas 24h</h1>
