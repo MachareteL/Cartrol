@@ -159,4 +159,18 @@ export const vehiclesRoute = createTRPCRouter({
       },
     });
   }),
+  getTotalMotorcycle: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.vehicles.count({
+      where: {
+        isMotorcycle: true,
+      },
+    });
+  }),
+  getTotalPresentVehicles: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.vehicles.count({
+      where: {
+        isPresent: true,
+      },
+    });
+  }),
 });
