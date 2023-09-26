@@ -21,7 +21,7 @@ export default function Dashboard() {
   const { data: todayEntries } = query.getTodayTotal.useQuery();
   const { data: totalEntriesAmt } = query.getTotal.useQuery();
   const { data: totalMotorcycle } = query.getTotalMotorcycle.useQuery();
-  
+
 
   const motorcycleData = [
     { name: "Moto", total: totalMotorcycle },
