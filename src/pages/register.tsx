@@ -68,7 +68,7 @@ export default function Register() {
     createCar.mutate(carInfo);
   }
   return (
-    <div className="relative flex h-screen w-screen items-center justify-center">
+    <div className="relative flex h-screen w-full items-center justify-center">
       <div className="absolute -bottom-10 right-0 -z-30 lg:bottom-0">
         <Image src={truckpana} alt="" />
       </div>
@@ -129,7 +129,7 @@ export default function Register() {
                 }}
               />
             }
-            label="O veículo é uma motocicleta"
+            label="Motocicleta"
           />
         </div>
         <div className="flex gap-4">
