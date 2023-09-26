@@ -53,7 +53,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="container mx-auto mt-24 space-y-4 ">
+      <div className="container mx-auto mt-24 space-y-4 px-4">
         <div className="flex">
           <Card className="flex">
             <div>
