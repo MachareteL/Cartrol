@@ -20,17 +20,8 @@ export default function Dashboard() {
   const query = api.vehicles;
   const { data: todayEntries } = query.getTodayTotal.useQuery();
   const { data: totalEntriesAmt } = query.getTotal.useQuery();
-  const { data: totalMotorcycle } = query.getTotalMotorcycle.useQuery();
+  const { data } = api.vehicles.getAllTotal.useQuery();
 
-
-  const motorcycleData = [
-    { name: "Moto", total: totalMotorcycle },
-    { name: "Carro", total: totalEntriesAmt! - totalMotorcycle! },
-  ];
-  const todayData = [
-    { name: "Total", total: totalEntriesAmt },
-    { name: "Hoje", total: todayEntries },
-  ];
   const lineChartData = [
     { name: "Total", total: totalEntriesAmt },
     { name: "Hoje", total: todayEntries },
@@ -39,7 +30,7 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col gap-12">
       <h1 className={`p-8 text-6xl text-bermuda`}>DASHBOARD</h1>
-      <div className="flex w-full justify-center place-self-end px-4 sm:justify-start gap-2">
+      <div className="flex w-full justify-center gap-2 place-self-end px-4 sm:justify-start">
         <div>
           <Card className="flex w-96">
             <div>
@@ -47,7 +38,7 @@ export default function Dashboard() {
               <h1 className="text-xl font-extrabold">{todayEntries}</h1>
             </div>
             <PieChartComponent
-              data={todayData}
+              data={data?.todayData ?? []}
               cellProps={[
                 { key: "cell-total-entries-1", fill: "#fdd343" },
                 { key: "cell-total-entries-2", fill: "#0400C2" },
@@ -66,7 +57,7 @@ export default function Dashboard() {
           <div className="flex gap-2">
             <Card className="flex flex-1">
               <PieChartComponent
-                data={motorcycleData}
+                data={data?.motorcycleData ?? []}
                 cellProps={[
                   { key: "cell-motorcycle-entries-2", fill: "#0400C2" },
                   { key: "cell-motorcycle-entries-1", fill: "#fdd343" },

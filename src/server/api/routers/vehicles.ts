@@ -89,7 +89,7 @@ export const vehiclesRoute = createTRPCRouter({
         }
         if (
           (!isPresent && !leavedAt) ||
-          !(isPresent && leavedAt == undefined)
+          (!isPresent && leavedAt == undefined)
         ) {
           throw new TRPCError({
             code: "BAD_REQUEST",
@@ -172,5 +172,33 @@ export const vehiclesRoute = createTRPCRouter({
         isPresent: true,
       },
     });
+  }),
+  getAllTotal: protectedProcedure.query(async ({ ctx }) => {
+    const totalVehicles = await ctx.prisma.vehicles.count();
+    const vehiclesRegisteredToday = await ctx.prisma.vehicles.count({
+      where: {
+        createdAt: { gte: moment().subtract(1, "day").toDate() },
+      },
+    });
+    const motorcyclesRegistered = await ctx.prisma.vehicles.count({
+      where: {
+        isMotorcycle: true,
+      },
+    });
+    const totalPresentVehicles = await ctx.prisma.vehicles.count({
+      where: {
+        isPresent: true,
+      },
+    });
+    return {
+      motorcycleData: [
+        { name: "Moto", total: motorcyclesRegistered },
+        { name: "Carro", total: totalVehicles - motorcyclesRegistered },
+      ],
+      todayData: [
+        { name: "Total", total: totalVehicles },
+        { name: "Hoje", total: vehiclesRegisteredToday },
+      ],
+    };
   }),
 });
