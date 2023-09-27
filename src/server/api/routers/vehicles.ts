@@ -190,7 +190,21 @@ export const vehiclesRoute = createTRPCRouter({
         isPresent: true,
       },
     });
+
+    const lastMonthVehicles = await ctx.prisma.vehicles.findMany({
+      where: {
+        createdAt: { gte: moment().subtract(1, "month").toDate() },
+      },
+    });
+
+    let moto = 0;
+    let carro = 0;
+    lastMonthVehicles.map((vehicle) => {
+      if (vehicle.isMotorcycle) moto++;
+      else carro++;
+    });
     return {
+      vehiclesRegisteredToday,
       motorcycleData: [
         { name: "Moto", total: motorcyclesRegistered },
         { name: "Carro", total: totalVehicles - motorcyclesRegistered },
@@ -198,6 +212,10 @@ export const vehiclesRoute = createTRPCRouter({
       todayData: [
         { name: "Total", total: totalVehicles },
         { name: "Hoje", total: vehiclesRegisteredToday },
+      ],
+      lineChartData: [
+        { name: "Semana", total: totalVehicles },
+        { name: "hoje", total: vehiclesRegisteredToday },
       ],
     };
   }),
