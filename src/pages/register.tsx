@@ -42,7 +42,7 @@ export default function Register() {
   });
 
   const { reload } = useRouter();
-  const [carInfo, setCarInfo] = useState<CarType>({
+  const [carInfo, setCarInfo] = useState<Vehicle>({
     protocol: "",
     isMotorcycle: false,
     modelName: "",
