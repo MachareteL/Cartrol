@@ -51,8 +51,8 @@ export const vehiclesRoute = createTRPCRouter({
         isMotorcycle: z.boolean(),
         isPresent: z.boolean(),
         createdAt: z.coerce.date(),
-        leavedAt: z.coerce.date().optional(),
-        more: z.string().optional(),
+        leavedAt: z.coerce.date().optional().nullable(),
+        more: z.string().optional().nullable(),
       })
     )
     .mutation(
