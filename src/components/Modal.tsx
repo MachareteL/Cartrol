@@ -2,11 +2,7 @@ import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 
-export default function Modal({
-  isOpen,
-  closeModal,
-  vehicle
-}: ModalProps) {
+export default function Modal({ isOpen, closeModal, vehicle }: ModalProps) {
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
@@ -63,7 +59,6 @@ export default function Modal({
           </div>
         </Dialog>
       </Transition>
-      {/* <Loading /> */}
     </>
   );
 }

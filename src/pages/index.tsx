@@ -143,7 +143,7 @@ export default function Home() {
                       <TableCell>{vehicle.modelName}</TableCell>
                       <TableCell>{vehicle.costumerName}</TableCell>
                       <TableCell>
-                        <Moment format="DD/MM/YYYY HH:mm:ss">
+                        <Moment format="DD/MM/YYYY">
                           {vehicle.createdAt}
                         </Moment>
                       </TableCell>
@@ -156,7 +156,7 @@ export default function Home() {
                       </TableCell>
                       <TableCell>
                         {vehicle.leavedAt ? (
-                          <Moment format="DD/MM/YYYY HH:mm:ss">
+                          <Moment format="DD/MM/YYYY">
                             {vehicle.leavedAt}
                           </Moment>
                         ) : (
