@@ -51,8 +51,8 @@ export const vehiclesRoute = createTRPCRouter({
         isMotorcycle: z.boolean(),
         isPresent: z.boolean(),
         createdAt: z.coerce.date(),
-        leavedAt: z.coerce.date().optional(),
-        more: z.string().optional(),
+        leavedAt: z.coerce.date().optional().nullable(),
+        more: z.string().optional().nullable(),
       })
     )
     .mutation(
@@ -89,7 +89,7 @@ export const vehiclesRoute = createTRPCRouter({
         }
         if (
           (!isPresent && !leavedAt) ||
-          !(isPresent && leavedAt == undefined)
+          (!isPresent && leavedAt == undefined)
         ) {
           throw new TRPCError({
             code: "BAD_REQUEST",
@@ -158,5 +158,65 @@ export const vehiclesRoute = createTRPCRouter({
         createdAt: { gte: moment().subtract(1, "day").toDate() },
       },
     });
+  }),
+  getTotalMotorcycle: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.vehicles.count({
+      where: {
+        isMotorcycle: true,
+      },
+    });
+  }),
+  getTotalPresentVehicles: protectedProcedure.query(async ({ ctx }) => {
+    return await ctx.prisma.vehicles.count({
+      where: {
+        isPresent: true,
+      },
+    });
+  }),
+  getAllTotal: protectedProcedure.query(async ({ ctx }) => {
+    const totalVehicles = await ctx.prisma.vehicles.count();
+    const vehiclesRegisteredToday = await ctx.prisma.vehicles.count({
+      where: {
+        createdAt: { gte: moment().subtract(1, "day").toDate() },
+      },
+    });
+    const motorcyclesRegistered = await ctx.prisma.vehicles.count({
+      where: {
+        isMotorcycle: true,
+      },
+    });
+    const totalPresentVehicles = await ctx.prisma.vehicles.count({
+      where: {
+        isPresent: true,
+      },
+    });
+
+    const lastMonthVehicles = await ctx.prisma.vehicles.findMany({
+      where: {
+        createdAt: { gte: moment().subtract(1, "month").toDate() },
+      },
+    });
+
+    let moto = 0;
+    let carro = 0;
+    lastMonthVehicles.map((vehicle) => {
+      if (vehicle.isMotorcycle) moto++;
+      else carro++;
+    });
+    return {
+      vehiclesRegisteredToday,
+      motorcycleData: [
+        { name: "Moto", total: motorcyclesRegistered },
+        { name: "Carro", total: totalVehicles - motorcyclesRegistered },
+      ],
+      todayData: [
+        { name: "Total", total: totalVehicles },
+        { name: "Hoje", total: vehiclesRegisteredToday },
+      ],
+      lineChartData: [
+        { name: "Semana", total: totalVehicles },
+        { name: "hoje", total: vehiclesRegisteredToday },
+      ],
+    };
   }),
 });

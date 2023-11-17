@@ -3,9 +3,9 @@ import { Link } from "@mui/material";
 import { useRouter } from "next/router";
 import {
   HomeIcon,
-  ChartBarIcon,
   ChartPieIcon,
   PlusCircleIcon,
+  PaperClipIcon,
 } from "@heroicons/react/24/outline";
 
 export default function Sidebar() {
@@ -41,7 +41,7 @@ export default function Sidebar() {
       href: "#",
       current: pathname == "/table" ? true : false,
       icon: (
-        <ChartBarIcon
+        <PaperClipIcon
           className={`w-8 sm:h-10 sm:w-10 ${
             pathname == "/table" ? "text-banana" : "text-white"
           } z-40 hover:text-banana`}

@@ -42,7 +42,7 @@ export default function Register() {
   });
 
   const { reload } = useRouter();
-  const [carInfo, setCarInfo] = useState<CarType>({
+  const [vehicleInfo, setCarInfo] = useState<Vehicle>({
     protocol: "",
     isMotorcycle: false,
     modelName: "",
@@ -53,22 +53,22 @@ export default function Register() {
   });
 
   useEffect(() => {
-    console.log(carInfo);
-  }, [carInfo]);
+    console.log(vehicleInfo);
+  }, [vehicleInfo]);
 
   function handleChange({
     target,
   }: ChangeEvent<HTMLInputElement> | SelectChangeEvent) {
-    setCarInfo({ ...carInfo, [target.name]: target.value });
+    setCarInfo({ ...vehicleInfo, [target.name]: target.value });
   }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    console.log(carInfo);
-    createCar.mutate(carInfo);
+    console.log(vehicleInfo);
+    createCar.mutate(vehicleInfo);
   }
   return (
-    <div className="relative flex h-screen w-screen items-center justify-center">
+    <div className="relative flex h-screen w-full items-center justify-center">
       <div className="absolute -bottom-10 right-0 -z-30 lg:bottom-0">
         <Image src={truckpana} alt="" />
       </div>
@@ -104,7 +104,7 @@ export default function Register() {
               <TextField {...params} label="Modelo" name="modelName" required />
             )}
             onInputChange={(_, newValue) => {
-              setCarInfo({ ...carInfo, modelName: newValue });
+              setCarInfo({ ...vehicleInfo, modelName: newValue });
             }}
           />
         </div>
@@ -114,7 +114,7 @@ export default function Register() {
             control={
               <Checkbox
                 onChange={(e) => {
-                  setCarInfo({ ...carInfo, isPresent: e.target.checked });
+                  setCarInfo({ ...vehicleInfo, isPresent: e.target.checked });
                 }}
               />
             }
@@ -125,11 +125,11 @@ export default function Register() {
             control={
               <Checkbox
                 onChange={(e) => {
-                  setCarInfo({ ...carInfo, isMotorcycle: e.target.checked });
+                  setCarInfo({ ...vehicleInfo, isMotorcycle: e.target.checked });
                 }}
               />
             }
-            label="O veículo é uma motocicleta"
+            label="Motocicleta"
           />
         </div>
         <div className="flex gap-4">
@@ -138,7 +138,7 @@ export default function Register() {
             name="createdAt"
             onChange={({ target }) => {
               setCarInfo({
-                ...carInfo,
+                ...vehicleInfo,
                 createdAt: moment(target.value).toDate(),
               });
             }}
@@ -149,11 +149,11 @@ export default function Register() {
             name="leavedAt"
             onChange={({ target }) => {
               setCarInfo({
-                ...carInfo,
+                ...vehicleInfo,
                 leavedAt: moment(target.value).toDate(),
               });
             }}
-            disabled={carInfo.isPresent}
+            disabled={vehicleInfo.isPresent}
             className="relative flex-1 before:absolute before:-top-6 before:left-0 before:content-['Data_de_Saida'] "
           />
         </div>
@@ -171,7 +171,7 @@ export default function Register() {
               />
             )}
             onInputChange={(_, newValue) => {
-              setCarInfo({ ...carInfo, costumerName: newValue });
+              setCarInfo({ ...vehicleInfo, costumerName: newValue });
             }}
           />
         </div>
