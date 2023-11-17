@@ -39,3 +39,24 @@ type ModalProps = {
   closeModal: () => void;
   vehicle?: Vehicle;
 };
+
+type DashboardData = {
+  vehiclesRegisteredToday: number;
+  motorcycleData: {
+    name: string;
+    total: number;
+  }[];
+  todayData: {
+    name: string;
+    total: number;
+  }[];
+  lineChartData: {
+    name: string;
+    total: number;
+  }[];
+  barChartData: {
+    name: string;
+    motocicletas: number;
+    carros: number;
+  }[];
+};

@@ -1,4 +1,7 @@
 import React from "react";
+import moment from "moment";
+import type { InferGetStaticPropsType } from "next";
+import type { GetStaticProps } from "next";
 import {
   Tooltip,
   ResponsiveContainer,
@@ -14,12 +17,15 @@ import {
 import Card from "~/components/Card";
 import PieChartComponent from "~/components/PieChartComponent";
 import { api } from "~/utils/api";
+import { prisma } from "~/server/db";
 
-export default function Dashboard() {
+export default function Dashboard(data: InferGetStaticPropsType<
+  typeof getStaticProps
+>) {
   const query = api.vehicles;
-  const { data } = api.vehicles.getAllTotal.useQuery();
+
   console.log(data?.barChartData);
-  
+
   return (
     <div className="flex flex-col gap-12">
       <h1 className={`p-8 text-6xl text-bermuda`}>DASHBOARD</h1>
@@ -128,3 +134,132 @@ export default function Dashboard() {
     </div>
   );
 }
+
+export const getStaticProps: GetStaticProps<DashboardData> = async () => {
+  const totalVehicles = await prisma.vehicles.count();
+  const vehiclesRegisteredToday = await prisma.vehicles.count({
+    where: {
+      createdAt: { gte: moment().subtract(1, "day").toDate() },
+    },
+  });
+  const motorcyclesRegistered = await prisma.vehicles.count({
+    where: {
+      isMotorcycle: true,
+    },
+  });
+  const totalPresentVehicles = await prisma.vehicles.count({
+    where: {
+      isPresent: true,
+    },
+  });
+
+  const lastMonthVehicles = await prisma.vehicles.findMany({
+    where: {
+      createdAt: { gte: moment().subtract(31, "days").toDate() },
+    },
+  });
+
+  return {
+    props: {
+      vehiclesRegisteredToday,
+      motorcycleData: [
+        { name: "Moto", total: motorcyclesRegistered },
+        { name: "Carro", total: totalVehicles - motorcyclesRegistered },
+      ],
+      todayData: [
+        { name: "Total", total: totalVehicles },
+        { name: "Hoje", total: vehiclesRegisteredToday },
+      ],
+      lineChartData: [
+        { name: "Semana", total: totalVehicles },
+        { name: "hoje", total: vehiclesRegisteredToday },
+      ],
+      barChartData: [
+        {
+          name: "Semana 1",
+          motocicletas: lastMonthVehicles.filter(
+            (vehicle) =>
+              moment(vehicle.createdAt).isSameOrAfter(
+                moment().subtract(4, "week")
+              ) &&
+              moment(vehicle.createdAt).isBefore(
+                moment().subtract(3, "week")
+              ) &&
+              vehicle.isMotorcycle
+          ).length,
+          carros: lastMonthVehicles.filter(
+            (vehicle) =>
+              moment(vehicle.createdAt).isSameOrAfter(
+                moment().subtract(4, "week")
+              ) &&
+              moment(vehicle.createdAt).isBefore(
+                moment().subtract(3, "week")
+              ) &&
+              !vehicle.isMotorcycle
+          ).length,
+        },
+        {
+          name: "Semana 2",
+          motocicletas: lastMonthVehicles.filter(
+            (vehicle) =>
+              moment(vehicle.createdAt).isSameOrAfter(
+                moment().subtract(3, "week")
+              ) &&
+              moment(vehicle.createdAt).isBefore(
+                moment().subtract(2, "week")
+              ) &&
+              vehicle.isMotorcycle
+          ).length,
+          carros: lastMonthVehicles.filter(
+            (vehicle) =>
+              moment(vehicle.createdAt).isSameOrAfter(
+                moment().subtract(3, "week")
+              ) &&
+              moment(vehicle.createdAt).isBefore(
+                moment().subtract(2, "week")
+              ) &&
+              !vehicle.isMotorcycle
+          ).length,
+        },
+        {
+          name: "Semana 3",
+          motocicletas: lastMonthVehicles.filter(
+            (vehicle) =>
+              moment(vehicle.createdAt).isSameOrAfter(
+                moment().subtract(2, "week")
+              ) &&
+              moment(vehicle.createdAt).isBefore(
+                moment().subtract(1, "week")
+              ) &&
+              vehicle.isMotorcycle
+          ).length,
+          carros: lastMonthVehicles.filter(
+            (vehicle) =>
+              moment(vehicle.createdAt).isSameOrAfter(
+                moment().subtract(2, "week")
+              ) &&
+              moment(vehicle.createdAt).isBefore(
+                moment().subtract(1, "week")
+              ) &&
+              !vehicle.isMotorcycle
+          ).length,
+        },
+        {
+          name: "Semana 4",
+          motocicletas: lastMonthVehicles.filter(
+            (vehicle) =>
+              moment(vehicle.createdAt).isSameOrAfter(
+                moment().subtract(1, "week")
+              ) && vehicle.isMotorcycle
+          ).length,
+          carros: lastMonthVehicles.filter(
+            (vehicle) =>
+              moment(vehicle.createdAt).isSameOrAfter(
+                moment().subtract(1, "week")
+              ) && !vehicle.isMotorcycle
+          ).length,
+        },
+      ],
+    },
+  };
+};
