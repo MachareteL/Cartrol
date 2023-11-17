@@ -16,7 +16,6 @@ export const vehiclesRoute = createTRPCRouter({
         skip: 10 * cursor,
         orderBy: [{ updatedAt: "desc" }],
       });
-      // console.log(vehicles);
 
       let nextCursor: typeof cursor | undefined;
       if (vehicles.length > 10) {
@@ -173,6 +172,7 @@ export const vehiclesRoute = createTRPCRouter({
       },
     });
   }),
+
   getAllTotal: protectedProcedure.query(async ({ ctx }) => {
     const totalVehicles = await ctx.prisma.vehicles.count();
     const vehiclesRegisteredToday = await ctx.prisma.vehicles.count({
@@ -193,16 +193,10 @@ export const vehiclesRoute = createTRPCRouter({
 
     const lastMonthVehicles = await ctx.prisma.vehicles.findMany({
       where: {
-        createdAt: { gte: moment().subtract(1, "month").toDate() },
+        createdAt: { gte: moment().subtract(31, "days").toDate() },
       },
     });
 
-    let moto = 0;
-    let carro = 0;
-    lastMonthVehicles.map((vehicle) => {
-      if (vehicle.isMotorcycle) moto++;
-      else carro++;
-    });
     return {
       vehiclesRegisteredToday,
       motorcycleData: [
@@ -216,6 +210,92 @@ export const vehiclesRoute = createTRPCRouter({
       lineChartData: [
         { name: "Semana", total: totalVehicles },
         { name: "hoje", total: vehiclesRegisteredToday },
+      ],
+      barChartData: [
+        {
+          name: "Semana 1",
+          motocicletas: lastMonthVehicles.filter(
+            (vehicle) =>
+              moment(vehicle.createdAt).isSameOrAfter(
+                moment().subtract(4, "week")
+              ) &&
+              moment(vehicle.createdAt).isBefore(
+                moment().subtract(3, "week")
+              ) &&
+              vehicle.isMotorcycle
+          ).length,
+          carros: lastMonthVehicles.filter(
+            (vehicle) =>
+              moment(vehicle.createdAt).isSameOrAfter(
+                moment().subtract(4, "week")
+              ) &&
+              moment(vehicle.createdAt).isBefore(
+                moment().subtract(3, "week")
+              ) &&
+              !vehicle.isMotorcycle
+          ).length,
+        },
+        {
+          name: "Semana 2",
+          motocicletas: lastMonthVehicles.filter(
+            (vehicle) =>
+              moment(vehicle.createdAt).isSameOrAfter(
+                moment().subtract(3, "week")
+              ) &&
+              moment(vehicle.createdAt).isBefore(
+                moment().subtract(2, "week")
+              ) &&
+              vehicle.isMotorcycle
+          ).length,
+          carros: lastMonthVehicles.filter(
+            (vehicle) =>
+              moment(vehicle.createdAt).isSameOrAfter(
+                moment().subtract(3, "week")
+              ) &&
+              moment(vehicle.createdAt).isBefore(
+                moment().subtract(2, "week")
+              ) &&
+              !vehicle.isMotorcycle
+          ).length,
+        },
+        {
+          name: "Semana 3",
+          motocicletas: lastMonthVehicles.filter(
+            (vehicle) =>
+              moment(vehicle.createdAt).isSameOrAfter(
+                moment().subtract(2, "week")
+              ) &&
+              moment(vehicle.createdAt).isBefore(
+                moment().subtract(1, "week")
+              ) &&
+              vehicle.isMotorcycle
+          ).length,
+          carros: lastMonthVehicles.filter(
+            (vehicle) =>
+              moment(vehicle.createdAt).isSameOrAfter(
+                moment().subtract(2, "week")
+              ) &&
+              moment(vehicle.createdAt).isBefore(
+                moment().subtract(1, "week")
+              ) &&
+              !vehicle.isMotorcycle
+          ).length,
+        },
+        {
+          name: "Semana 4",
+          motocicletas: lastMonthVehicles.filter(
+            (vehicle) =>
+              moment(vehicle.createdAt).isSameOrAfter(
+                moment().subtract(1, "week")
+              ) && vehicle.isMotorcycle
+          ).length,
+          carros: lastMonthVehicles.filter(
+            (vehicle) =>
+              moment(vehicle.createdAt).isSameOrAfter(
+                moment().subtract(1, "week")
+              ) && !vehicle.isMotorcycle
+          ).length,
+        },
       ],
     };
   }),
