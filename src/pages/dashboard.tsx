@@ -16,16 +16,11 @@ import {
 } from "recharts";
 import Card from "~/components/Card";
 import PieChartComponent from "~/components/PieChartComponent";
-import { api } from "~/utils/api";
 import { prisma } from "~/server/db";
 
-export default function Dashboard(data: InferGetStaticPropsType<
-  typeof getStaticProps
->) {
-  const query = api.vehicles;
-
-  console.log(data?.barChartData);
-
+export default function Dashboard(
+  data: InferGetStaticPropsType<typeof getStaticProps>
+) {
   return (
     <div className="flex flex-col gap-12">
       <h1 className={`p-8 text-6xl text-bermuda`}>DASHBOARD</h1>
@@ -33,7 +28,7 @@ export default function Dashboard(data: InferGetStaticPropsType<
         <div className="w-[30rem] space-y-4">
           <Card className="flex w-full">
             <div>
-              <h1 className="text-gray-600">Cadastro nas últimas 24h</h1>
+              <h1 className="text-gray-600">Entradas nas últimas 24h</h1>
               <h1 className="text-xl font-extrabold">
                 {data?.vehiclesRegisteredToday}
               </h1>
@@ -64,8 +59,14 @@ export default function Dashboard(data: InferGetStaticPropsType<
         </div>
 
         <div className="flex-1 space-y-4">
-          <div className="flex gap-2">
+          <div className="flex gap-2 pr-4">
             <Card className="flex flex-1">
+              <div>
+                <h1 className="text-gray-600">Saidas nas últimas 24h</h1>
+                <h1 className="text-xl font-extrabold">
+                  {data?.vehiclesRegisteredToday}
+                </h1>
+              </div>
               <PieChartComponent
                 data={data?.motorcycleData ?? []}
                 cellProps={[
@@ -77,6 +78,12 @@ export default function Dashboard(data: InferGetStaticPropsType<
               />
             </Card>
             <Card className="flex flex-1">
+              <div>
+                <h1 className="text-gray-600">Carros Totais</h1>
+                <h1 className="text-xl font-extrabold">
+                  {data?.vehiclesRegisteredToday}
+                </h1>
+              </div>
               <PieChartComponent
                 data={data?.motorcycleData ?? []}
                 cellProps={[
@@ -88,6 +95,12 @@ export default function Dashboard(data: InferGetStaticPropsType<
               />
             </Card>
             <Card className="flex flex-1">
+              <div>
+                <h1 className="text-gray-600">Motos Totais</h1>
+                <h1 className="text-xl font-extrabold">
+                  {data?.vehiclesRegisteredToday}
+                </h1>
+              </div>
               <PieChartComponent
                 data={data?.motorcycleData ?? []}
                 cellProps={[
@@ -99,8 +112,8 @@ export default function Dashboard(data: InferGetStaticPropsType<
               />
             </Card>
           </div>
-          <div>
-            <Card className="flex flex-1">
+          <div className="pr-4">
+            <Card className="flex flex-1 ">
               <ResponsiveContainer height={500} width={"100%"}>
                 <LineChart
                   data={data?.lineChartData}
@@ -113,18 +126,18 @@ export default function Dashboard(data: InferGetStaticPropsType<
                     bottom: 5,
                   }}
                 >
-                  <XAxis dataKey="name" />
+                  <XAxis dataKey="month" />
                   <YAxis />
                   <CartesianGrid />
                   <Tooltip />
                   <Legend />
                   <Line
                     type="monotone"
-                    dataKey="total"
+                    dataKey="entradas"
                     stroke="#8884d8"
                     activeDot={{ r: 8 }}
                   />
-                  <Line type="monotone" dataKey="total" stroke="#82ca9d" />
+                  <Line type="monotone" dataKey="saidas" stroke="#82ca9d" />
                 </LineChart>
               </ResponsiveContainer>
             </Card>
@@ -147,17 +160,55 @@ export const getStaticProps: GetStaticProps<DashboardData> = async () => {
       isMotorcycle: true,
     },
   });
-  const totalPresentVehicles = await prisma.vehicles.count({
-    where: {
-      isPresent: true,
-    },
-  });
 
   const lastMonthVehicles = await prisma.vehicles.findMany({
     where: {
       createdAt: { gte: moment().subtract(31, "days").toDate() },
     },
   });
+
+  const months = [];
+
+  async function fetchLinechartData(lte: number, gte: number) {
+    const [entradas, saidas] = await Promise.all([
+      prisma.vehicles.count({
+        where: {
+          createdAt: {
+            lte: moment()
+              .subtract(11 - lte, "month")
+              .toDate(),
+            gte: moment()
+              .subtract(11 - gte, "month")
+              .toDate(),
+          },
+        },
+      }),
+      prisma.vehicles.count({
+        where: {
+          leavedAt: {
+            lte: moment()
+              .subtract(11 - lte, "month")
+              .toDate(),
+            gte: moment()
+              .subtract(11 - gte, "month")
+              .toDate(),
+          },
+        },
+      }),
+    ]);
+    return { entradas, saidas };
+  }
+
+  for (let month = 0; month < 12; month++) {
+    const { entradas, saidas } = await fetchLinechartData(month + 1, month);
+    months.push({
+      month: moment().month(month).format("MMMM"),
+      entradas,
+      saidas,
+    });
+  }
+  console.log(months);
+  console.log(months[0]);
 
   return {
     props: {
@@ -170,10 +221,7 @@ export const getStaticProps: GetStaticProps<DashboardData> = async () => {
         { name: "Total", total: totalVehicles },
         { name: "Hoje", total: vehiclesRegisteredToday },
       ],
-      lineChartData: [
-        { name: "Semana", total: totalVehicles },
-        { name: "hoje", total: vehiclesRegisteredToday },
-      ],
+      lineChartData: months,
       barChartData: [
         {
           name: "Semana 1",

@@ -51,8 +51,9 @@ type DashboardData = {
     total: number;
   }[];
   lineChartData: {
-    name: string;
-    total: number;
+    month: string;
+    entradas: number;
+    saidas: number;
   }[];
   barChartData: {
     name: string;
