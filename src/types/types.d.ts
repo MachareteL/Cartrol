@@ -42,6 +42,9 @@ type ModalProps = {
 
 type DashboardData = {
   vehiclesRegisteredToday: number;
+  vehiclesLeftToday: number;
+  motorcyclesRegistered: number;
+  carsRegistered: number
   motorcycleData: {
     name: string;
     total: number;

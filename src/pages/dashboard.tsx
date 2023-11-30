@@ -64,7 +64,7 @@ export default function Dashboard(
               <div>
                 <h1 className="text-gray-600">Saidas nas últimas 24h</h1>
                 <h1 className="text-xl font-extrabold">
-                  {data?.vehiclesRegisteredToday}
+                  {data?.vehiclesLeftToday}
                 </h1>
               </div>
               <PieChartComponent
@@ -98,7 +98,7 @@ export default function Dashboard(
               <div>
                 <h1 className="text-gray-600">Motos Totais</h1>
                 <h1 className="text-xl font-extrabold">
-                  {data?.vehiclesRegisteredToday}
+                  {data?.motorcyclesRegistered}
                 </h1>
               </div>
               <PieChartComponent
@@ -155,9 +155,19 @@ export const getStaticProps: GetStaticProps<DashboardData> = async () => {
       createdAt: { gte: moment().subtract(1, "day").toDate() },
     },
   });
+  const vehiclesLeftToday = await prisma.vehicles.count({
+    where: {
+      leavedAt: { gte: moment().subtract(1, "day").toDate() },
+    },
+  });
   const motorcyclesRegistered = await prisma.vehicles.count({
     where: {
       isMotorcycle: true,
+    },
+  });
+  const carsRegistered = await prisma.vehicles.count({
+    where: {
+      isMotorcycle: false,
     },
   });
 
@@ -213,6 +223,9 @@ export const getStaticProps: GetStaticProps<DashboardData> = async () => {
   return {
     props: {
       vehiclesRegisteredToday,
+      vehiclesLeftToday,
+      carsRegistered,
+      motorcyclesRegistered,
       motorcycleData: [
         { name: "Moto", total: motorcyclesRegistered },
         { name: "Carro", total: totalVehicles - motorcyclesRegistered },
@@ -309,5 +322,6 @@ export const getStaticProps: GetStaticProps<DashboardData> = async () => {
         },
       ],
     },
+    revalidate: 60 * 60 * 24,
   };
 };
