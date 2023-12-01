@@ -1,6 +1,17 @@
 import React from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
+import {
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+} from "@mui/material";
+import { inter } from "~/pages";
+import Card from "./Card";
 
 export default function Modal({ isOpen, closeModal, vehicle }: ModalProps) {
   return (
@@ -30,27 +41,42 @@ export default function Modal({ isOpen, closeModal, vehicle }: ModalProps) {
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+                <Dialog.Panel className="w-full max-w-xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6 text-gray-900"
                   >
-                    {vehicle?.protocol}
+                    <b>Protocolo</b> {vehicle?.protocol}
                   </Dialog.Title>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      Your payment has been successfully submitted. We’ve sent
-                      you an email with all of the details of your order.
-                    </p>
-                  </div>
-
-                  <div className="mt-4">
+                  <table className="my-4 w-full">
+                    <tr className="border-b border-gray-300">
+                      <th className="pl-2 pr-6 py-2">Modelo</th>
+                      <td className="py-2 font-extralight">{vehicle?.modelName}</td>
+                    </tr>
+                    <tr className="border-b border-gray-300">
+                      <th className="pl-2 pr-6 py-2">Placa</th>
+                      <td className="py-2 font-extralight">{vehicle?.sign}</td>
+                    </tr>
+                    <tr>
+                      <th className="pl-2 pr-6 py-2">Observação</th>
+                      <td className="py-2 font-extralight">{vehicle?.more}</td>
+                    </tr>
+                  </table>
+                  <span></span>
+                  <div className="mt-4 flex justify-between">
                     <button
                       type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      className="rounded-md border border-transparent bg-yellow-100 px-4 py-2 text-sm font-medium text-yellow-900 hover:bg-yellow-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2"
                       onClick={closeModal}
                     >
-                      Got it, thanks!
+                      Editar
+                    </button>
+                    <button
+                      type="button"
+                      className="rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                      onClick={closeModal}
+                    >
+                      Confirmar
                     </button>
                   </div>
                 </Dialog.Panel>

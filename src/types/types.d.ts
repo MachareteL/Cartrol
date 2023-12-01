@@ -53,6 +53,10 @@ type DashboardData = {
     name: string;
     total: number;
   }[];
+  todayLeftData: {
+    name: string;
+    total: number;
+  }[];
   lineChartData: {
     month: string;
     entradas: number;

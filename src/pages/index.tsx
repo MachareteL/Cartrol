@@ -20,7 +20,7 @@ import drivingpana from "public/driving-pana.svg";
 import { useState } from "react";
 import Modal from "~/components/Modal";
 
-const inter = Inter({
+export const inter = Inter({
   subsets: ["cyrillic"],
 });
 export default function Home() {
@@ -34,7 +34,6 @@ export default function Home() {
       }
     );
   const { data: amount } = api.vehicles.getTotal.useQuery();
-
 
   if (isLoading) {
     return <Loading />;
@@ -143,9 +142,7 @@ export default function Home() {
                       <TableCell>{vehicle.modelName}</TableCell>
                       <TableCell>{vehicle.costumerName}</TableCell>
                       <TableCell>
-                        <Moment format="DD/MM/YYYY">
-                          {vehicle.createdAt}
-                        </Moment>
+                        <Moment format="DD/MM/YYYY">{vehicle.createdAt}</Moment>
                       </TableCell>
                       <TableCell padding="checkbox">
                         {vehicle.isPresent ? (
@@ -155,12 +152,10 @@ export default function Home() {
                         )}
                       </TableCell>
                       <TableCell>
-                        {vehicle.leavedAt ? (
+                        {vehicle.leavedAt && (
                           <Moment format="DD/MM/YYYY">
                             {vehicle.leavedAt}
                           </Moment>
-                        ) : (
-                          <></>
                         )}
                       </TableCell>
                     </TableRow>

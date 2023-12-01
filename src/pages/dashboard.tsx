@@ -51,8 +51,8 @@ export default function Dashboard(
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="carros" fill="#8884d8" />
-                <Bar dataKey="motocicletas" fill="#82ca9d" />
+                <Bar dataKey="carros" fill="#0400C2" />
+                <Bar dataKey="motocicletas" fill="#fdd343" />
               </BarChart>
             </ResponsiveContainer>
           </Card>
@@ -68,7 +68,7 @@ export default function Dashboard(
                 </h1>
               </div>
               <PieChartComponent
-                data={data?.motorcycleData ?? []}
+                data={data?.todayLeftData ?? []}
                 cellProps={[
                   { key: "cell-motorcycle-entries-2", fill: "#0400C2" },
                   { key: "cell-motorcycle-entries-1", fill: "#fdd343" },
@@ -81,7 +81,7 @@ export default function Dashboard(
               <div>
                 <h1 className="text-gray-600">Carros Totais</h1>
                 <h1 className="text-xl font-extrabold">
-                  {data?.vehiclesRegisteredToday}
+                  {data?.carsRegistered}
                 </h1>
               </div>
               <PieChartComponent
@@ -104,8 +104,8 @@ export default function Dashboard(
               <PieChartComponent
                 data={data?.motorcycleData ?? []}
                 cellProps={[
-                  { key: "cell-motorcycle-entries-2", fill: "#0400C2" },
-                  { key: "cell-motorcycle-entries-1", fill: "#fdd343" },
+                  { key: "cell-motorcycle-entries-4", fill: "#fdd343" },
+                  { key: "cell-motorcycle-entries-3", fill: "#0400C2" },
                 ]}
                 dataKey="total"
                 key={"today-total-entries"}
@@ -134,10 +134,10 @@ export default function Dashboard(
                   <Line
                     type="monotone"
                     dataKey="entradas"
-                    stroke="#8884d8"
+                    stroke="#0400C2"
                     activeDot={{ r: 8 }}
                   />
-                  <Line type="monotone" dataKey="saidas" stroke="#82ca9d" />
+                  <Line type="monotone" dataKey="saidas" stroke="#fdd343" />
                 </LineChart>
               </ResponsiveContainer>
             </Card>
@@ -228,11 +228,15 @@ export const getStaticProps: GetStaticProps<DashboardData> = async () => {
       motorcyclesRegistered,
       motorcycleData: [
         { name: "Moto", total: motorcyclesRegistered },
-        { name: "Carro", total: totalVehicles - motorcyclesRegistered },
+        { name: "Carro", total: carsRegistered },
       ],
       todayData: [
         { name: "Total", total: totalVehicles },
         { name: "Hoje", total: vehiclesRegisteredToday },
+      ],
+      todayLeftData: [
+        { name: "Total", total: totalVehicles },
+        { name: "Hoje", total: vehiclesLeftToday },
       ],
       lineChartData: months,
       barChartData: [
