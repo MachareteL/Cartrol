@@ -26,6 +26,9 @@ export const inter = Inter({
 export default function Home() {
   const [open, setOpen] = useState(false);
   const [vehicleDetail, setVehicleDetail] = useState<Vehicle>();
+  function handleEditVehicle(vehicle: Vehicle) {
+    setVehicleDetail(vehicle)
+  }
   const { data, isError, isLoading, hasNextPage, fetchNextPage } =
     api.vehicles.getAll.useInfiniteQuery(
       {},
@@ -62,6 +65,7 @@ export default function Home() {
           setOpen(false);
         }}
         vehicle={vehicleDetail}
+        handleEditVehicle={handleEditVehicle}
       />
       <div className="container mx-auto mt-24 space-y-4 px-4">
         <div className="flex">

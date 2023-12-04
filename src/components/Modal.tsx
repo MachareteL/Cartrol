@@ -1,19 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
-import {
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
-import { inter } from "~/pages";
-import Card from "./Card";
+import Image from "next/image";
+import editIcon from "/public/edit.svg";
 
-export default function Modal({ isOpen, closeModal, vehicle }: ModalProps) {
+export default function Modal({
+  isOpen,
+  closeModal,
+  vehicle,
+  handleEditVehicle,
+}: ModalProps) {
+  const [editingMode, setEditingMode] = useState(false);
+
+  function handleEditData() {
+    if (!editingMode) {
+      return closeModal();
+    }
+    console.log("teste");
+  }
   return (
     <>
       <Transition appear show={isOpen} as={Fragment}>
@@ -49,34 +53,69 @@ export default function Modal({ isOpen, closeModal, vehicle }: ModalProps) {
                     <b>Protocolo</b> {vehicle?.protocol}
                   </Dialog.Title>
                   <table className="my-4 w-full">
-                    <tr className="border-b border-gray-300">
-                      <th className="pl-2 pr-6 py-2">Modelo</th>
-                      <td className="py-2 font-extralight">{vehicle?.modelName}</td>
-                    </tr>
-                    <tr className="border-b border-gray-300">
-                      <th className="pl-2 pr-6 py-2">Placa</th>
-                      <td className="py-2 font-extralight">{vehicle?.sign}</td>
-                    </tr>
-                    <tr>
-                      <th className="pl-2 pr-6 py-2">Observação</th>
-                      <td className="py-2 font-extralight">{vehicle?.more}</td>
-                    </tr>
+                    <tbody>
+                      <tr className="border-b border-gray-300">
+                        <th className="py-2 pl-2 pr-6">Modelo</th>
+                        <td className={`py-2 font-extralight ${editingMode && "italic"}`}>
+                          {vehicle?.modelName}
+                        </td>
+                      </tr>
+                      <tr className="border-b border-gray-300">
+                        <th className="py-2 pl-2 pr-6">Placa</th>
+                        <td className={`py-2 font-extralight ${editingMode && "italic"}`}>
+                          {vehicle?.sign}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th className="py-2 pl-2 pr-6">Observação</th>
+                        <td className={`py-2 font-extralight ${editingMode && "italic"}`}>
+                          {vehicle?.more}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th className="py-2 pl-2 pr-6">Entrada</th>
+                        <td className={`py-2 font-extralight ${editingMode && "italic"}`}>
+                          {vehicle?.createdAt.toLocaleDateString()}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th className="py-2 pl-2 pr-6">Saída</th>
+                        <td className={`py-2 font-extralight ${editingMode && "italic"}`}>
+                          {vehicle?.leavedAt?.toLocaleDateString() ??
+                            "Está no patio"}
+                        </td>
+                      </tr>
+                      <tr>
+                        <th className="py-2 pl-2 pr-6">Cliente</th>
+                        <td className={`py-2 font-extralight ${editingMode && "italic"}`}>
+                          {vehicle?.costumerName}
+                        </td>
+                      </tr>
+                    </tbody>
                   </table>
-                  <span></span>
                   <div className="mt-4 flex justify-between">
-                    <button
-                      type="button"
-                      className="rounded-md border border-transparent bg-yellow-100 px-4 py-2 text-sm font-medium text-yellow-900 hover:bg-yellow-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
-                    >
-                      Editar
-                    </button>
+                    {!editingMode && (
+                      <button
+                        type="button"
+                        className="rounded-md border border-transparent bg-yellow-100 px-4 py-2 text-sm font-medium text-yellow-900 hover:bg-yellow-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-500 focus-visible:ring-offset-2"
+                        onClick={() => {
+                          setEditingMode(true);
+                        }}
+                      >
+                        Editar
+                        <Image
+                          src={editIcon}
+                          alt=""
+                          className="inline-flex w-5"
+                        />
+                      </button>
+                    )}
                     <button
                       type="button"
                       className="rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
+                      onClick={handleEditData}
                     >
-                      Confirmar
+                      {editingMode ? "Salvar" : "Confirmar"}
                     </button>
                   </div>
                 </Dialog.Panel>

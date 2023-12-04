@@ -38,13 +38,14 @@ type ModalProps = {
   isOpen: boolean;
   closeModal: () => void;
   vehicle?: Vehicle;
+  handleEditVehicle: (vehicle: Vehicle) => void;
 };
 
 type DashboardData = {
   vehiclesRegisteredToday: number;
   vehiclesLeftToday: number;
   motorcyclesRegistered: number;
-  carsRegistered: number
+  carsRegistered: number;
   motorcycleData: {
     name: string;
     total: number;
